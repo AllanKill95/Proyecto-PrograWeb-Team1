@@ -1,0 +1,6 @@
+@Proyecto_PrograWeb_Team1_HostAddress = http://localhost:5224
+
+GET {{Proyecto_PrograWeb_Team1_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
