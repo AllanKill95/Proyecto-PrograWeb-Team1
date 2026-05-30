@@ -14,6 +14,7 @@ builder.Services.AddSingleton<FirebaseService>();
 // AddScoped crea una instancia nueva por cada peticion HTTP que llegue
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<DenunciaServices>();
+builder.Services.AddScoped<NotaService>();
 
 builder.Services.AddControllers();
 
@@ -50,6 +51,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 // AddAuthorization, habilitar el uso del [Authorize] en los controllers
 builder.Services.AddAuthorization();
+
+
 
 // CORS
 // CORS controla que origenes externos pueden llamar el API
