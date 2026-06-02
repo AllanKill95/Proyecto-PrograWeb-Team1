@@ -5,8 +5,8 @@ public class Experimento
     //Representa un experimento o pruebas que un usuario esta realizando 
     //Funcionalidad principal depues de hacer el login
     
-    public string Id { get; set; }
-    
+    public string Id { get; set; } = string.Empty;
+
     //Titulo de lo que se intenta hacer
     public string Tittle { get; set; } = string.Empty;
     

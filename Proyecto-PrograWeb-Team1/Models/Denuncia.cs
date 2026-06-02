@@ -6,8 +6,8 @@ public class Denuncia
     //Representa un las denuncias que se realizan
     //Funcionalidad principal depues de hacer el login
     
-    public string Id { get; set; }
-    
+    public string Id { get; set; } = string.Empty;
+
     //Titulo de lo que se intenta hacer
     public string Title { get; set; } = string.Empty;
     
