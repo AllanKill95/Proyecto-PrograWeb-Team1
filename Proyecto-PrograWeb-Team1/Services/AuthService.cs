@@ -110,9 +110,9 @@ public class AuthService
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                 
                 var token = new JwtSecurityToken(
-                        
+
                         issuer: _configuration["Jwt:Issuer"], //Quien lo genera, nuestro token lo genera la app
-                        audience: _configuration["Jwt:Issuer"], // Para quien lo genera, clientes / front-end
+                        audience: _configuration["Jwt:Audience"], // Para quien lo genera, clientes / front-end
                         claims: claims, // Estos son los datos del usuario
                         expires: DateTime.UtcNow.AddHours(8), //Tiempo de vida del token
                         signingCredentials: creds // Firma de seguridad
