@@ -7,6 +7,7 @@ using Proyecto_PrograWeb_Team1.Models;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Convert = System.Convert;
 
 namespace Proyecto_PrograWeb_Team1.Services;
 
@@ -40,7 +41,7 @@ public class AuthService
             Id = Guid.NewGuid().ToString(),
             FullName = dto.FullName,
             Email = dto.Email,
-            PasswordHash = HashPasword(dto.Password),
+            PasswordHash = HashPassword(dto.Password),
             Role = "user",
             CreatedAt =  DateTime.UtcNow
         };
@@ -65,10 +66,10 @@ public class AuthService
         var snapshot = await collection
             .WhereEqualTo("Email", dto.Email)
             .GetSnapshotAsync();
-        
+
         if(snapshot.Count == 0)
-            throw new Exception("No existe ningun usuario con esa credencial");
-        
+            throw new Exception("Credenciales inválidas");
+
         // Si lo encontramos mapeamos manualmente el documento a nuestro objeto
         // Usamos ToDictionary()
         var doc = snapshot.Documents[0];
@@ -82,13 +83,13 @@ public class AuthService
             PasswordHash = data["PasswordHash"].ToString()!,
             Role = data["Role"].ToString()!,
             // Int64, necesitamos convertirlo
-            CreatedAt = ((Google.Cloud.Firestore.Timestamp)data["CreatedAt"]).ToDateTime()  
+            CreatedAt = ((Google.Cloud.Firestore.Timestamp)data["CreatedAt"]).ToDateTime()
         };
-        
+
         // Verificar si la contraseña esta hasheada
         if(!VerifyPassword(dto.Password, user.PasswordHash))
-            throw new Exception("Password incorrecto");
-        
+            throw new Exception("Credenciales inválidas");
+
         // Se completo exitosamente, generamos un token JWT
         return GenerateToken(user);
 
@@ -120,16 +121,44 @@ public class AuthService
                     return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    private bool VerifyPassword(string dtoPassword, string userPasswordHash)
+    private bool VerifyPassword(string password, string hash)
     {
-        return HashPasword(dtoPassword) == userPasswordHash;
+        try
+        {
+            var parts = hash.Split(':');
+            if (parts.Length != 2)
+                return false;
+
+            var salt = Convert.FromBase64String(parts[0]);
+            var storedHash = parts[1];
+
+            using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000, HashAlgorithmName.SHA256))
+            {
+                var computedHash = Convert.ToBase64String(pbkdf2.GetBytes(256 / 8));
+                return computedHash == storedHash;
+            }
+        }
+        catch
+        {
+            return false;
+        }
     }
 
-    // Para encriptar la contraseña
-    private string HashPasword(string password)
+    // Encriptar contraseña con PBKDF2 + salt
+    private string HashPassword(string password)
     {
-        // SHA256 - tipo de encriptacion
-        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
-        return Convert.ToBase64String(bytes);
+        using (var rng = RandomNumberGenerator.Create())
+        {
+            byte[] salt = new byte[16];
+            rng.GetBytes(salt);
+
+            using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000, HashAlgorithmName.SHA256))
+            {
+                var hash = pbkdf2.GetBytes(256 / 8);
+                var saltB64 = Convert.ToBase64String(salt);
+                var hashB64 = Convert.ToBase64String(hash);
+                return $"{saltB64}:{hashB64}";
+            }
+        }
     }
 }

@@ -6,6 +6,16 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Validar configuración crítica antes de arrancar
+var jwtKey = builder.Configuration["Jwt:Key"];
+if (string.IsNullOrEmpty(jwtKey))
+    throw new InvalidOperationException(
+        "Configuración faltante: Jwt:Key no está configurada. " +
+        "Configúrala mediante:\n" +
+        "  1. Variable de entorno: set JWT_KEY=...\n" +
+        "  2. User Secrets: dotnet user-secrets set Jwt:Key <clave>\n" +
+        "  3. appsettings.Development.json (solo desarrollo)");
+
 // Servicios
 
 // AddSingleton crear una sola instancia de FirebaseService para toda la vida de la app
@@ -44,7 +54,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+            Encoding.UTF8.GetBytes(jwtKey))
     };
 });
 
