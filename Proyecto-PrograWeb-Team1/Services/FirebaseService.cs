@@ -20,7 +20,7 @@ public class FirebaseService
         Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialPath);
         
         // Ahora, aqui colocamos el project id 
-        _firestoreDb = FirestoreDb.Create("proyecto-847");
+        _firestoreDb = FirestoreDb.Create("proyecto-web-grupo6");
     }
     
     // Devuelve una referencia de una coleccion

@@ -1,6 +1,7 @@
 using Proyecto_PrograWeb_Team1.Models;
 using Proyecto_PrograWeb_Team1.DTOs;
 
+
 namespace Proyecto_PrograWeb_Team1.Services;
 
     public class DenunciaServices
@@ -16,14 +17,25 @@ namespace Proyecto_PrograWeb_Team1.Services;
 
     public async Task<Denuncia> Create(CrearDenunciaDto dto, string userId)
     {
+
+        if (!Enum.TryParse<Categoria>(dto.Categoria, true, out Categoria categoria))
+        {
+            throw new Exception ("Categoria invalida");
+        }
+        if (!Enum.TryParse<Status>(dto.Status, true, out Status status))
+        {
+            throw new Exception ("Status invalido");
+        }
+
         var denuncia = new Denuncia
         {
             Id = Guid.NewGuid().ToString(),
             Title = dto.Title,
-            Result = dto.Result,
+            Status = dto.Status,
             Success = dto.Success,
             UserId = userId,
             CreatedAt = DateTime.UtcNow,
+            Categoria =  dto.Categoria,
             Comment = dto.Comment
         };
         
@@ -35,10 +47,11 @@ namespace Proyecto_PrograWeb_Team1.Services;
             {
                 { "Id", denuncia.Id },
                 { "Title", denuncia.Title },
-                { "Result", denuncia.Result },
+                { "Status", denuncia.Status },
                 { "Comment", denuncia.Comment },
                 { "Success", denuncia.Success },
                 { "UserId", denuncia.UserId },
+                {"Categoria", denuncia.Categoria},
                 { "CreatedAt", denuncia.CreatedAt },
             });
         return denuncia;
@@ -61,10 +74,11 @@ namespace Proyecto_PrograWeb_Team1.Services;
             {
                 Id = data["Id"].ToString()!,
                 Title = data["Title"].ToString()!,
-                Result = data["Result"].ToString()!,
+                Status = data["Status"].ToString()!,
                 Comment = data["Comment"].ToString()!,
                 Success = (bool)data["Success"],
                 UserId = data["UserId"].ToString()!,
+                Categoria = data["Categoria"].ToString()!,
                 CreatedAt = ((Google.Cloud.Firestore.Timestamp)data["CreatedAt"]).ToDateTime()
             });
         }
