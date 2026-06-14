@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Proyecto_PrograWeb_Team1.Models;
 using Proyecto_PrograWeb_Team1.Services;
 using Scalar.AspNetCore;
 
@@ -14,7 +15,7 @@ builder.Services.AddSingleton<FirebaseService>();
 // AddScoped crea una instancia nueva por cada peticion HTTP que llegue
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<DenunciaServices>();
-
+builder.Services.AddScoped<UserServices>();
 builder.Services.AddControllers();
 
 // AddOpenApi registrar el generador de documentacion que Scalar va a leer

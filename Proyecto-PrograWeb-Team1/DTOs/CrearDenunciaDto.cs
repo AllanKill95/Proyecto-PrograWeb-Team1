@@ -13,6 +13,8 @@ public class CrearDenunciaDto
     public bool Success { get; set; } = false;
     public string Categoria { get; set; } = string.Empty;
     
+    public string Userreport { get; set; } = string.Empty;
+    
     
 
 }

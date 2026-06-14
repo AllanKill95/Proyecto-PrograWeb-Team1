@@ -4,12 +4,11 @@ namespace Proyecto_PrograWeb_Team1.Models;
 public enum Status
 
     {
+        Nuevo,
         Revision,
-        Pendiente,
-        Moreinfo,
+        Cerradosinacuerdo,
         Completado,
-        Progress
-
+        Mediacion
         
     }
 

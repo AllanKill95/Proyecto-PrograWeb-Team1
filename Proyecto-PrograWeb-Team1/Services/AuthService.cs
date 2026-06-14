@@ -21,7 +21,8 @@ public class AuthService
         _firebaseService = firebaseService;
         _configuration = configuration;
     }
-
+    
+    
     public async Task<User> Register(RegisterDto dto)
     {
         // Primero verificamos que no existe un usuario con ese correo

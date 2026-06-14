@@ -28,6 +28,8 @@ public class Denuncia
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
+    public string Userreport { get; set; } = string.Empty;
+    
     
     
 }
