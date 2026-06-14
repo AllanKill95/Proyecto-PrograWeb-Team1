@@ -23,7 +23,15 @@ namespace Proyecto_PrograWeb_Team1.Services;
 
     public async Task<Denuncia> Create(CrearDenunciaDto dto, string userId)
     {
-
+        var denunciaExistente = await _firebaseService.GetCollection("denuncia").WhereEqualTo("UserId", userId)
+            .WhereEqualTo("User-report", dto.Userreport) .WhereEqualTo("Status", dto.Status) .GetSnapshotAsync();
+        if (denunciaExistente.Documents.Count != 0)
+        {
+            throw new Exception ("Ya existe una denuncia entre estos usuarios");
+        }
+            
+        //VALIDACIONES PARA QUE ESTE CORRECTO (LA VERDAD NO SE SI IR ACA SEA UNA BUENA PRACTICA 
+        
         if (!Enum.TryParse<Categoria>(dto.Categoria, true, out Categoria categoria))
         {
             throw new Exception ("Categoria invalida");
@@ -50,6 +58,8 @@ namespace Proyecto_PrograWeb_Team1.Services;
             Comment = dto.Comment,
             Userreport = dto.Userreport,
         };
+        
+        
         
         // Guardamos con Dictionary
 
