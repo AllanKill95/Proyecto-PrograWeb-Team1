@@ -14,11 +14,12 @@ namespace Proyecto_PrograWeb_Team1.Controllers;
         // Guarda el servicio en una privada readonly
         // Solo de lectura porque no deberia cambiar despues que se hace la inyeccion
         private readonly AuthService _authService;
-        
+        private readonly MailService _mailService;
         // El constructor recibe el AuthService gracias a la inyeccion de dependencias
-        public AuthController(AuthService authService)
+        public AuthController(AuthService authService,MailService mailService)
         {
             _authService = authService;
+            _mailService = mailService;
         }
         
         // HttpPost indica que este endpoint responde a peticiones POST
@@ -66,4 +67,36 @@ namespace Proyecto_PrograWeb_Team1.Controllers;
                 return BadRequest(new { message = e.Message });
             }
         }
+        
+        //Recuperador de password
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(
+            [FromBody] ForgetPasswDto dto
+        )
+        {
+            try
+            {
+               await _authService.ForgotPassword(dto.Email);
+                return Ok("Revisa tu bandeja de entrada");
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { message = e.Message });
+            }
+         
+        }
+        
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(
+            [FromBody] ResetPasswordDto dto)
+        {
+            await _authService.ResetPassword(dto);
+
+            return Ok(new
+            {
+                Message = "Contraseña actualizada correctamente"
+            });
+        }
+        
     }

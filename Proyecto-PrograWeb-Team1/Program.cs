@@ -18,6 +18,8 @@ builder.Services.AddScoped<DenunciaServices>();
 builder.Services.AddScoped<UserServices>();
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<MailService>();
+
 // AddOpenApi registrar el generador de documentacion que Scalar va a leer
 // !existe Scalar no va poder reconocer los endpoints que existen ni como los definieron
 builder.Services.AddOpenApi(options =>
