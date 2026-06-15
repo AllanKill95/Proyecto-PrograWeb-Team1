@@ -17,6 +17,10 @@ public class User
     
     // Para saber cuando se creo el registro
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
+    //PARA RESETEEAR
+    public string? ResetToken { get; set; }
+    public DateTime? ResetTokenExpiresAt { get; set; }
 
 
 }

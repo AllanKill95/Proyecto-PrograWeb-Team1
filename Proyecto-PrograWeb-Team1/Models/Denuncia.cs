@@ -15,7 +15,7 @@ public class Denuncia
     public string Comment { get; set; } = string.Empty;
     
     //El resultado de si funciona o no
-    public string Result { get; set; } = string.Empty;
+    public string Status { get; set; } = string.Empty;
     
     //Usuario que creo el experimento / Pruebas
     public string UserId { get; set; } = string.Empty;
@@ -23,11 +23,15 @@ public class Denuncia
     //Exito o fracasp
     public bool Success { get; set; } = false;
     
+    //Categoria de denuncia
+    public string Categoria { get; set; } = string.Empty;
+    
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
-    
-    
+    public string Userreport { get; set; } = string.Empty;
     
     
     
 }
+
+

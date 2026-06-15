@@ -58,5 +58,21 @@ namespace Proyecto_PrograWeb_Team1.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+        
+        [HttpGet("all")]
+        [Authorize (Roles = "admin, guardia")]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+
+                var denuncia = await _denunciaService.GetAll();
+                return Ok(denuncia);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }
